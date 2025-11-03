@@ -1,35 +1,40 @@
-const API = "https://script.google.com/macros/s/AKfycbxxQaRV6aV4hZfaDqI29E8JihEgnmer0lgne-GNNZCiZqqL5XckER5VQMSCEC_3z_fq/exec";
-let missions = [];
+const API_URL = "https://script.google.com/macros/s/AKfycbxxQaRV6aV4hZfaDqI29E8JihEgnmer0lgne-GNNZCiZqqL5XckER5VQMSCEC_3z_fq/exec";
 
 async function loadMissions() {
-  const res = await fetch(API);
-  missions = await res.json();
-  display(missions);
+  try {
+    const res = await fetch(API_URL);
+    const missions = await res.json();
+
+    const missionsContainer = document.getElementById("missionsContainer");
+    missionsContainer.innerHTML = "";
+
+    missions.forEach(mission => {
+      const card = document.createElement("div");
+      card.className = "mission-card";
+
+      card.innerHTML = `
+        <div class="mission-badge">
+          <img src="assets/agency/${mission.Agency}.png" alt="${mission.Agency}">
+        </div>
+
+        <h3>${mission.Name}</h3>
+        <p><strong>Agency:</strong> ${mission.Agency}</p>
+        <p><strong>Launch:</strong> ${mission.LaunchDate}</p>
+        <span class="status ${mission.Status.toLowerCase()}">${mission.Status}</span>
+      `;
+
+      // ✅ Click card → go to mission details page
+      card.addEventListener("click", () => {
+        const missionId = mission.MissionID;
+        window.location.href = `mission/index.html?id=${encodeURIComponent(missionId)}`;
+      });
+
+      missionsContainer.appendChild(card);
+    });
+
+  } catch (error) {
+    console.error("Error loading missions:", error);
+  }
 }
-
-function display(list) {
-  document.getElementById("missions").innerHTML = list.map(m => `
-    <div class="card">
-      <h2>${m.mission_name}</h2>
-      <p><b>Agency:</b> ${m.agency}</p>
-      <p><b>Status:</b> ${m.status}</p>
-      <p><b>Launch:</b> ${m.launch_date}</p>
-      <p>${m.description}</p>
-      <button onclick="viewTrajectory('${m.trajectory_url}')">View Trajectory</button>
-    </div>
-  `).join("");
-}
-
-function viewTrajectory(url){ window.open(url, "_blank"); }
-
-document.getElementById("search").onkeyup = e => {
-  const q = e.target.value.toLowerCase();
-  display(missions.filter(m => m.mission_name.toLowerCase().includes(q)));
-};
-
-document.getElementById("agencyFilter").onchange = e => {
-  const agency = e.target.value;
-  display(!agency ? missions : missions.filter(m => m.agency === agency));
-};
 
 loadMissions();
