@@ -22,6 +22,30 @@ header {
     letter-spacing: 3px;
     border-bottom: 1px solid rgba(255,255,255,0.2);
 }
+
+.nav-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.nav-btn {
+    background: rgba(0,255,255,0.15);
+    border: 1px solid cyan;
+    padding: 8px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    color: cyan;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.2s;
+}
+.nav-btn:hover {
+    background: cyan;
+    color: black;
+}
+
 .controls {
     display: flex;
     gap: 10px;
@@ -69,25 +93,42 @@ header {
 </head>
 <body>
 
-<header>🌌 SpaceTravelHub — Global Space Missions Database</header>
+<header>
+    🌌 SpaceTravelHub — Global Space Missions Database
+    
+    <div class="nav-buttons">
+        <a href="index.html" class="nav-btn">🏠 Home</a>
+        <a href="map3d.html" class="nav-btn">🛰 3D Space View</a>
+        <a href="map2d.html" class="nav-btn">🌍 2D Map</a>
+        <a href="gallery.html" class="nav-btn">📸 Gallery</a>
+    </div>
+</header>
 
 <div class="controls">
-    <input type="text" id="search" placeholder="Search Missions..." />
-    <select id="agencyFilter">
-        <option value="">All Agencies</option>
-        <option value="NASA">NASA</option>
-        <option value="ISRO">ISRO</option>
-        <option value="SpaceX">SpaceX</option>
-        <option value="ESA">ESA</option>
-        <option value="JAXA">JAXA</option>
-        <option value="Roscosmos">Roscosmos</option>
-        <option value="CNSA">CNSA</option>
-    </select>
+  <input type="text" id="search" placeholder="🔎 Search Missions, Spacecraft, etc">
+  
+  <select id="agencyFilter">
+    <option value="">🌐 All Agencies</option>
+    <option value="NASA">🚀 NASA</option>
+    <option value="ISRO">🇮🇳 ISRO</option>
+    <option value="SpaceX">🛰 SpaceX</option>
+    <option value="ESA">🇪🇺 ESA</option>
+    <option value="JAXA">🇯🇵 JAXA</option>
+    <option value="Roscosmos">🇷🇺 Roscosmos</option>
+    <option value="CNSA">🇨🇳 CNSA</option>
+  </select>
+
+  <select id="sort">
+    <option value="">Sort By</option>
+    <option value="latest">🚀 Latest Launch</option>
+    <option value="alpha">🔤 Alphabetical</option>
+  </select>
 </div>
 
 <div class="mission-container" id="missions"></div>
 
 <script src="script.js"></script>
+<script src="live-update.js"></script>
 
 </body>
 </html>

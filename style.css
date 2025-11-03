@@ -49,3 +49,25 @@ input,select {
   width: 100%;
   border-radius: 10px;
 }
+/* neon glow buttons */
+.nav-btn, .btn {
+  box-shadow: 0 0 12px cyan, inset 0 0 12px cyan;
+  transition: 0.3s ease;
+}
+.nav-btn:hover, .btn:hover {
+  box-shadow: 0 0 25px #00eaff, inset 0 0 12px #00eaff;
+}
+
+/* glowing grid background */
+body {
+  background: radial-gradient(circle, rgba(0,255,255,0.08) 0%, rgba(0,0,0,1) 70%), 
+              url("https://i.imgur.com/qqqYcP9.png");
+  background-size: cover;
+}
+
+/* card hover glow */
+.mission-card:hover {
+  border: 1px solid cyan;
+  box-shadow: 0 0 10px cyan;
+  transform: translateY(-4px);
+}
