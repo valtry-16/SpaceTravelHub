@@ -5,29 +5,66 @@
 <title>Mission Details | SpaceTravelHub</title>
 <link rel="stylesheet" href="../style.css" />
 
-<!-- CesiumJS -->
-<link href="https://cesium.com/downloads/cesiumjs/releases/1.116/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
-<script src="https://cesium.com/downloads/cesiumjs/releases/1.116/Build/Cesium/Cesium.js"></script>
-
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+<style>
+.mission-page {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+  color: white;
+}
+.mission-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.mission-header img {
+  width: 60px;
+  height: 60px;
+  border-radius: 100%;
+}
+.back-btn {
+  margin-bottom: 15px;
+  cursor: pointer;
+  padding: 8px 14px;
+  background: #0a0a0a;
+  border: 1px solid #444;
+  color: #00ffe0;
+  border-radius: 5px;
+}
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(120px,1fr));
+  gap: 8px;
+  margin-top: 10px;
+}
+.gallery img {
+  width: 100%;
+  border-radius: 8px;
+}
+.info-box {
+  background: rgba(255,255,255,0.05);
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+</style>
 </head>
+
 <body>
 
-<div class="mission-container">
-  <button onclick="history.back()" class="back-btn">⬅ Back</button>
+<div class="mission-page">
 
-  <div id="missionInfo"></div>
+  <button class="back-btn" onclick="history.back()">⬅ Back</button>
 
-  <h2>📡 Live Location (3D Globe)</h2>
-  <div id="cesiumContainer" style="height: 300px;"></div>
+  <div id="missionContent">Loading...</div>
 
-  <h2>📊 Live Telemetry</h2>
+  <h2>📈 Telemetry (Altitude)</h2>
   <canvas id="telemetryChart"></canvas>
 
-  <h2>🛰️ Mission Gallery</h2>
-  <div id="gallery" class="gallery"></div>
 </div>
 
 <script src="details.js"></script>

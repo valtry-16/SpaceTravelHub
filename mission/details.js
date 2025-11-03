@@ -1,63 +1,72 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbxxQaRV6aV4hZfaDqI29E8JihEgnmer0lgne-GNNZCiZqqL5XckER5VQMSCEC_3z_fq/exec";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Mission Details | SpaceTravelHub</title>
+<link rel="stylesheet" href="../style.css" />
 
-const params = new URLSearchParams(window.location.search);
-const missionId = params.get("id");
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-async function loadMission() {
-  const res = await fetch(API_URL);
-  const missions = await res.json();
-  const mission = missions.find(m => m.MissionID === missionId);
-
-  document.getElementById("missionInfo").innerHTML = `
-    <h1>${mission.Name}</h1>
-    <p><b>Agency:</b> ${mission.Agency}</p>
-    <p><b>Launch Date:</b> ${mission.LaunchDate}</p>
-    <p><b>Status:</b> ${mission.Status}</p>
-    <p>${mission.Summary}</p>
-    <a href="${mission.WikiURL}" target="_blank">More Info</a>
-  `;
-
-  loadGlobe(mission);
-  loadChart(mission);
-  loadGallery(mission);
+<style>
+.mission-page {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+  color: white;
 }
-
-function loadGallery(mission) {
-  const gallery = document.getElementById("gallery");
-  const images = mission.Images?.split(",") || [];
-
-  images.forEach(img => {
-    const el = document.createElement("img");
-    el.src = img.trim();
-    gallery.appendChild(el);
-  });
+.mission-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
-
-function loadGlobe(mission) {
-  const viewer = new Cesium.Viewer("cesiumContainer", { animation: false, timeline: false });
-
-  viewer.entities.add({
-    position: Cesium.Cartesian3.fromDegrees(mission.Lng, mission.Lat, mission.Alt * 1000),
-    point: { pixelSize: 10 },
-    label: { text: mission.Name }
-  });
-
-  viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(mission.Lng, mission.Lat, 5000000) });
+.mission-header img {
+  width: 60px;
+  height: 60px;
+  border-radius: 100%;
 }
-
-function loadChart(mission) {
-  const ctx = document.getElementById("telemetryChart");
-  new Chart(ctx, {
-    type: "line",
-    data: {
-      labels: ["Start", "Middle", "Now"],
-      datasets: [{
-        label: "Altitude (km)",
-        data: [0, mission.Alt / 2, mission.Alt],
-        borderWidth: 2
-      }]
-    }
-  });
+.back-btn {
+  margin-bottom: 15px;
+  cursor: pointer;
+  padding: 8px 14px;
+  background: #0a0a0a;
+  border: 1px solid #444;
+  color: #00ffe0;
+  border-radius: 5px;
 }
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(120px,1fr));
+  gap: 8px;
+  margin-top: 10px;
+}
+.gallery img {
+  width: 100%;
+  border-radius: 8px;
+}
+.info-box {
+  background: rgba(255,255,255,0.05);
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+</style>
+</head>
 
-loadMission();
+<body>
+
+<div class="mission-page">
+
+  <button class="back-btn" onclick="history.back()">⬅ Back</button>
+
+  <div id="missionContent">Loading...</div>
+
+  <h2>📈 Telemetry (Altitude)</h2>
+  <canvas id="telemetryChart"></canvas>
+
+</div>
+
+<script src="details.js"></script>
+</body>
+</html>
