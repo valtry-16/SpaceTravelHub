@@ -1,27 +1,35 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>SpaceTravelHub 🌌</title>
-<link rel="stylesheet" href="style.css">
+<meta charset="UTF-8" />
+<title>SpaceTravelHub | Missions</title>
+<link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
 <header>
- <h1>🚀 SpaceTravelHub</h1>
- <input id="search" placeholder="Search missions...">
- <select id="agencyFilter">
-   <option value="">All Agencies</option>
-   <option>ISRO</option>
-   <option>NASA</option>
-   <option>ESA</option>
-   <option>SpaceX</option>
-   <option>JAXA</option>
-   <option>Roscosmos</option>
-   <option>CNSA</option>
- </select>
+  <h1>🚀 SpaceTravelHub</h1>
+  <p>Explore every rocket mission from Earth to Space</p>
 </header>
 
-<div id="missions"></div>
+<div class="filters">
+  <input id="searchBox" placeholder="Search missions...">
+  
+  <select id="agencyFilter">
+    <option value="">All Agencies</option>
+    <option>ISRO</option><option>NASA</option><option>SpaceX</option>
+    <option>ESA</option><option>Roscosmos</option><option>CNSA</option><option>JAXA</option>
+  </select>
+
+  <select id="sortBy">
+    <option value="">Sort By</option>
+    <option value="name">Name</option>
+    <option value="date">Launch Date</option>
+  </select>
+</div>
+
+<div id="missionsContainer" class="mission-grid"></div>
 
 <script src="script.js"></script>
 </body>

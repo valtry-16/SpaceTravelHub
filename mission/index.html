@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Mission Details | SpaceTravelHub</title>
+<link rel="stylesheet" href="../style.css" />
+
+<!-- CesiumJS -->
+<link href="https://cesium.com/downloads/cesiumjs/releases/1.116/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+<script src="https://cesium.com/downloads/cesiumjs/releases/1.116/Build/Cesium/Cesium.js"></script>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<body>
+
+<div class="mission-container">
+  <button onclick="history.back()" class="back-btn">⬅ Back</button>
+
+  <div id="missionInfo"></div>
+
+  <h2>📡 Live Location (3D Globe)</h2>
+  <div id="cesiumContainer" style="height: 300px;"></div>
+
+  <h2>📊 Live Telemetry</h2>
+  <canvas id="telemetryChart"></canvas>
+
+  <h2>🛰️ Mission Gallery</h2>
+  <div id="gallery" class="gallery"></div>
+</div>
+
+<script src="details.js"></script>
+</body>
+</html>
