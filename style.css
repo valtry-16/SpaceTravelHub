@@ -1,0 +1,41 @@
+body {
+  background:#020c1b;
+  color:#fff;
+  font-family:Orbitron, sans-serif;
+}
+
+header {
+  display:flex;
+  gap:10px;
+  padding:20px;
+  align-items:center;
+  background:#09192e;
+  border-bottom:2px solid cyan;
+}
+
+input,select {
+  padding:10px;
+  background:#0d203b;
+  color:white;
+  border:1px solid cyan;
+  border-radius:6px;
+}
+
+#missions {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:15px;
+  padding:20px;
+}
+
+.card {
+  padding:15px;
+  border:1px solid cyan;
+  background:#0d203b;
+  border-radius:10px;
+  transition:0.3s;
+}
+.card:hover {
+  transform:scale(1.03);
+  box-shadow:0 0 15px cyan;
+}
