@@ -1,67 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>3D Space View – SpaceTravelHub</title>
-<script src="https://cesium.com/downloads/cesiumjs/releases/1.114/Build/Cesium/Cesium.js"></script>
-<link href="https://cesium.com/downloads/cesiumjs/releases/1.114/Build/Cesium/Widgets/widgets.css" rel="stylesheet" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D Space Mission Tracker</title>
+
+<!-- Cesium -->
+<link href="https://cesium.com/downloads/cesiumjs/releases/1.113/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+<script src="https://cesium.com/downloads/cesiumjs/releases/1.113/Build/Cesium/Cesium.js"></script>
+
 <style>
-html, body, #cesiumContainer {
-  width: 100%; height: 100%; margin: 0; padding: 0; background: black;
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: black;
+  font-family: "Orbitron", sans-serif;
 }
-.hud {
-  position: absolute; top: 15px; left: 15px;
-  padding: 8px 14px;
-  background: rgba(0,0,0,0.5);
+
+#cesiumContainer {
+  width: 100vw;
+  height: 100vh;
+}
+
+/* HUD Title */
+#hudTitle {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 10px 15px;
+  background: rgba(0, 255, 255, 0.12);
   border: 1px solid cyan;
   color: cyan;
-  font-family: "Orbitron", sans-serif;
-  border-radius: 8px;
+  border-radius: 6px;
+  letter-spacing: 1px;
+  backdrop-filter: blur(6px);
+  font-size: 14px;
+}
+
+/* Back Button */
+#backBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 8px 14px;
+  background: rgba(0, 255, 255, 0.15);
+  border: 1px solid cyan;
+  color: cyan;
+  border-radius: 6px;
+  text-decoration: none;
+}
+#backBtn:hover {
+  background: cyan;
+  color: black;
 }
 </style>
+
 </head>
 <body>
 
-<div class="hud">🛰 Live Satellite Tracking</div>
+<div id="hudTitle">🛰 Real-Time 3D Orbital Tracker</div>
+<a id="backBtn" href="index.html">⬅ Back</a>
 <div id="cesiumContainer"></div>
 
-<script type="module">
-import { Viewer, Cartesian3, Color, PointGraphics, Entity } from "https://cdn.jsdelivr.net/npm/cesium@1.114.0/+esm";
-
+<script>
+// ✅ Your Google Sheets API URL (you gave me)
 const apiURL = "https://script.google.com/macros/s/AKfycbxxQaRV6aV4hZfaDqI29E8JihEgnmer0lgne-GNNZCiZqqL5XckER5VQMSCEC_3z_fq/exec";
 
-const viewer = new Viewer("cesiumContainer", {
-  timeline: false,
-  animation: false,
-  baseLayerPicker: true,
+// ✅ Enter your Cesium Token here
+Cesium.Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI5YzU1NjJhMS03NGIyLTRhZTktOTNjMS0wYmQxMWFkMmRmMTQiLCJpZCI6MzU2NjE2LCJpYXQiOjE3NjIxNjYwNDh9.5EUecQVTb8thV1IjQ_XkcygNx2MKHZUz4t9swOwuGQ4";
+
+const viewer = new Cesium.Viewer("cesiumContainer", {
+  imageryProvider: new Cesium.IonImageryProvider({ assetId: 3 }), // Bing Satellite
+  terrainProvider: Cesium.createWorldTerrain(),
   shouldAnimate: true
 });
 
-async function loadSatellites() {
-  const res = await fetch(apiURL);
-  const missions = await res.json();
+// ✅ Load missions from Google Sheets
+async function loadMissions() {
+  try {
+    const res = await fetch(apiURL);
+    const missions = await res.json();
 
-  missions.forEach(m => {
-    if (!m.lat || !m.lng || !m.alt) return;
+    missions.forEach(m => {
+      if (!m.lat || !m.lng || !m.alt) return;
 
-    viewer.entities.add(new Entity({
-      name: m.mission,
-      position: Cartesian3.fromDegrees(m.lng, m.lat, m.alt * 1000),
-      point: new PointGraphics({
-        pixelSize: 10,
-        color: Color.CYAN,
-      }),
-      description: `
-        <h3>${m.mission}</h3>
-        <p><b>Agency:</b> ${m.agency}</p>
-        <p><b>Status:</b> ${m.status}</p>
-        <p><b>Altitude:</b> ${m.alt} km</p>
-      `
-    }));
-  });
+      viewer.entities.add({
+        name: m.mission,
+        position: Cesium.Cartesian3.fromDegrees(m.lng, m.lat, m.alt * 1000),
+        point: { pixelSize: 8 },
+        label: {
+          text: m.mission,
+          font: "14px sans-serif",
+          fillColor: Cesium.Color.CYAN,
+          outlineColor: Cesium.Color.BLACK,
+          outlineWidth: 2,
+          style: Cesium.LabelStyle.FILL_AND_OUTLINE
+        }
+      });
+    });
+
+  } catch (e) {
+    console.error("API Error:", e);
+  }
 }
 
-loadSatellites();
+loadMissions();
 </script>
+
 </body>
 </html>
