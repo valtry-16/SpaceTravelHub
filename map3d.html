@@ -66,47 +66,38 @@ body, html {
 
 <script>
 // ✅ Your Google Sheets API URL (you gave me)
-const apiURL = "https://script.google.com/macros/s/AKfycbxxQaRV6aV4hZfaDqI29E8JihEgnmer0lgne-GNNZCiZqqL5XckER5VQMSCEC_3z_fq/exec";
-
-// ✅ Enter your Cesium Token here
-Cesium.Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI5YzU1NjJhMS03NGIyLTRhZTktOTNjMS0wYmQxMWFkMmRmMTQiLCJpZCI6MzU2NjE2LCJpYXQiOjE3NjIxNjYwNDh9.5EUecQVTb8thV1IjQ_XkcygNx2MKHZUz4t9swOwuGQ4";
+<script>
+Cesium.Ion.defaultAccessToken = "YOUR_CESIUM_TOKEN";
 
 const viewer = new Cesium.Viewer("cesiumContainer", {
-  imageryProvider: new Cesium.IonImageryProvider({ assetId: 3 }), // Bing Satellite
   terrainProvider: Cesium.createWorldTerrain(),
-  shouldAnimate: true
+  imageryProvider: new Cesium.IonImageryProvider({ assetId: 3 })
 });
 
-// ✅ Load missions from Google Sheets
-async function loadMissions() {
-  try {
-    const res = await fetch(apiURL);
-    const missions = await res.json();
+async function loadSatellites() {
+  const res = await fetch("https://opensheet.elk.sh/1_Ns_2hGkxx8H63NPm_b7m7z0F3PvKoP15bVq_YQrTC0/Missions");
+  const missions = await res.json();
 
-    missions.forEach(m => {
-      if (!m.lat || !m.lng || !m.alt) return;
+  missions.forEach(m => {
+    if (!m.lat || !m.lng || !m.alt) return;
 
-      viewer.entities.add({
-        name: m.mission,
-        position: Cesium.Cartesian3.fromDegrees(m.lng, m.lat, m.alt * 1000),
-        point: { pixelSize: 8 },
-        label: {
-          text: m.mission,
-          font: "14px sans-serif",
-          fillColor: Cesium.Color.CYAN,
-          outlineColor: Cesium.Color.BLACK,
-          outlineWidth: 2,
-          style: Cesium.LabelStyle.FILL_AND_OUTLINE
-        }
-      });
+    viewer.entities.add({
+      name: m.mission,
+      position: Cesium.Cartesian3.fromDegrees(Number(m.lng), Number(m.lat), Number(m.alt)*1000),
+      point: { pixelSize: 8 },
+      label: {
+        text: m.mission,
+        font: "14px sans-serif",
+        style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+        fillColor: Cesium.Color.CYAN,
+        outlineColor: Cesium.Color.BLACK,
+        outlineWidth: 2
+      }
     });
-
-  } catch (e) {
-    console.error("API Error:", e);
-  }
+  });
 }
 
-loadMissions();
+loadSatellites();
 </script>
 
 </body>

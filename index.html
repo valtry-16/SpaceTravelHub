@@ -3,132 +3,102 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>SpaceTravelHub 🚀</title>
+<title>SpaceTravelHub</title>
+
 <link rel="stylesheet" href="style.css" />
-<link rel="icon" type="image/png" href="assets/logo.png" />
 
 <style>
 body {
-    margin: 0;
-    font-family: "Orbitron", sans-serif;
-    background: black;
-    color: white;
+  font-family: Orbitron, sans-serif;
+  background: black;
+  color: white;
 }
 header {
-    padding: 20px;
-    text-align: center;
-    font-size: 32px;
-    font-weight: bold;
-    letter-spacing: 3px;
-    border-bottom: 1px solid rgba(255,255,255,0.2);
+  padding: 20px;
+  text-align: center;
 }
-
-.nav-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 10px;
+.mission-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+  gap: 15px;
+  padding: 20px;
 }
-
-.nav-btn {
-    background: rgba(0,255,255,0.15);
-    border: 1px solid cyan;
-    padding: 8px 14px;
-    border-radius: 10px;
-    cursor: pointer;
-    color: cyan;
-    text-decoration: none;
-    font-size: 14px;
-    transition: 0.2s;
+.card {
+  background: rgba(0, 255, 255, 0.1);
+  border: 1px solid cyan;
+  padding: 15px;
+  border-radius: 10px;
+  transition: .2s;
+  cursor: pointer;
 }
-.nav-btn:hover {
-    background: cyan;
-    color: black;
+.card:hover {
+  background: rgba(0,255,255,0.2);
+  transform: scale(1.02);
 }
-
-.controls {
-    display: flex;
-    gap: 10px;
-    padding: 15px;
-    justify-content: center;
+img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
 }
-.controls input, .controls select {
-    padding: 10px;
-    border-radius: 10px;
-    border: none;
-    outline: none;
-    width: 200px;
-}
-.mission-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 20px;
-    padding: 20px;
-}
-.mission-card {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.15);
-    padding: 20px;
-    border-radius: 15px;
-    transition: 0.3s;
-    cursor: pointer;
-}
-.mission-card:hover {
-    transform: translateY(-5px);
-    background: rgba(255,255,255,0.15);
-}
-.agency-logo {
-    width: 50px;
-    height: 50px;
-}
-.badge {
-    padding: 5px 10px;
-    border-radius: 8px;
-    background: #00c2ff;
-    display: inline-block;
-    margin-bottom: 10px;
-    font-size: 14px;
+.btn {
+  padding: 10px 15px;
+  border: 1px solid cyan;
+  color: cyan;
+  text-decoration: none;
+  display: inline-block;
+  margin: 10px;
 }
 </style>
+
 </head>
 <body>
 
 <header>
-    🌌 SpaceTravelHub — Global Space Missions Database
-    
-    <div class="nav-buttons">
-        <a href="index.html" class="nav-btn">🏠 Home</a>
-        <a href="map3d.html" class="nav-btn">🛰 3D Space View</a>
-        <a href="map2d.html" class="nav-btn">🌍 2D Map</a>
-        <a href="gallery.html" class="nav-btn">📸 Gallery</a>
-    </div>
+  <h1>🚀 SpaceTravelHub</h1>
+  <a href="map3d.html" class="btn">3D Space View</a>
+  <a href="map2d.html" class="btn">2D Space Map</a>
 </header>
 
-<div class="controls">
-  <input type="text" id="search" placeholder="🔎 Search Missions, Spacecraft, etc">
-  
-  <select id="agencyFilter">
-    <option value="">🌐 All Agencies</option>
-    <option value="NASA">🚀 NASA</option>
-    <option value="ISRO">🇮🇳 ISRO</option>
-    <option value="SpaceX">🛰 SpaceX</option>
-    <option value="ESA">🇪🇺 ESA</option>
-    <option value="JAXA">🇯🇵 JAXA</option>
-    <option value="Roscosmos">🇷🇺 Roscosmos</option>
-    <option value="CNSA">🇨🇳 CNSA</option>
-  </select>
+<div class="mission-grid" id="missionContainer"></div>
 
-  <select id="sort">
-    <option value="">Sort By</option>
-    <option value="latest">🚀 Latest Launch</option>
-    <option value="alpha">🔤 Alphabetical</option>
-  </select>
-</div>
+<script>
+const apiURL = "https://script.google.com/macros/s/AKfycbxxQaRV6aV4hZfaDqI29E8JihEgnmer0lgne-GNNZCiZqqL5XckER5VQMSCEC_3z_fq/exec";
 
-<div class="mission-container" id="missions"></div>
+async function loadMissions() {
+  try {
+    const res = await fetch(apiURL);
+    const missions = await res.json();
 
-<script src="script.js"></script>
-<script src="live-update.js"></script>
+    let container = document.getElementById("missionContainer");
+    container.innerHTML = "";
+
+    missions.forEach(mission => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <img src="${mission.image}" alt="${mission.mission}">
+        <h3>${mission.mission}</h3>
+        <p>Agency: ${mission.agency}</p>
+        <p>Status: ${mission.status}</p>
+        <p>Launch: ${mission.launch}</p>
+        <p style="font-size:12px">${mission.summary}</p>
+      `;
+
+      card.addEventListener("click", () => {
+        window.location.href = `mission/index.html?name=${encodeURIComponent(mission.mission)}`;
+      });
+
+      container.appendChild(card);
+    });
+
+  } catch (err) {
+    console.error("Error loading missions", err);
+  }
+}
+
+loadMissions();
+</script>
 
 </body>
 </html>
